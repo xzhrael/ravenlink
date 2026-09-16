@@ -24,6 +24,7 @@ export function AdminNav({ userName, userImage, signOutAction }: AdminNavProps) 
         <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
           <Link
             href="/admin"
+            prefetch={true}
             className="flex items-center gap-2 font-black text-lg sm:text-xl tracking-tight uppercase shrink-0"
           >
             <RavenlinkLogo size="md" />
@@ -40,6 +41,7 @@ export function AdminNav({ userName, userImage, signOutAction }: AdminNavProps) 
           {/* Switch to User Dashboard Button */}
           <Link
             href="/dashboard"
+            prefetch={true}
             className="h-8 px-2.5 sm:px-3 bg-[#FFDE59] text-[#0D0D0D] brutal-border-sm text-xs font-mono font-bold inline-flex items-center gap-1.5 hover:bg-[#FFD738] transition-colors select-none"
             title="Dashboard"
           >
@@ -111,6 +113,7 @@ export function AdminNav({ userName, userImage, signOutAction }: AdminNavProps) 
 
           <Link
             href="/dashboard"
+            prefetch={true}
             onClick={() => setIsMobileMenuOpen(false)}
             className="w-full p-3 bg-white dark:bg-[#1C1B1A] brutal-border-sm flex items-center justify-between text-xs font-bold uppercase"
           >

@@ -83,6 +83,7 @@ export function DashboardNav({
           <div className="flex items-center gap-2.5 sm:gap-3 min-w-0 shrink-0">
             <Link
               href="/dashboard"
+              prefetch={true}
               className="flex items-center gap-2 font-black text-lg sm:text-xl tracking-tight uppercase shrink-0"
             >
               <RavenlinkLogo size="md" />
@@ -111,6 +112,7 @@ export function DashboardNav({
                 <Link
                   key={link.href}
                   href={link.href}
+                  prefetch={true}
                   className={`h-8 px-2.5 xl:px-3 brutal-border-sm transition-transform active:translate-y-0.5 inline-flex items-center gap-1.5 shrink-0 select-none ${
                     isActive
                       ? "bg-black text-white dark:bg-white dark:text-black"
@@ -133,6 +135,7 @@ export function DashboardNav({
             {userRole === "SUPER_ADMIN" && (
               <Link
                 href="/admin"
+                prefetch={true}
                 className="h-8 px-2.5 bg-[#FFDE59] text-[#0D0D0D] brutal-border-sm text-xs font-mono font-bold inline-flex items-center gap-1 hover:bg-[#FFD738] transition-colors shrink-0 select-none"
                 title="Admin Dashboard"
               >
@@ -273,6 +276,7 @@ export function DashboardNav({
                   <Link
                     key={link.href}
                     href={link.href}
+                    prefetch={true}
                     onClick={() => setIsMobileMenuOpen(false)}
                     className={`w-full p-4 brutal-card flex items-center justify-between font-mono text-sm font-black uppercase transition-transform active:translate-y-0.5 ${
                       isActive
@@ -299,6 +303,7 @@ export function DashboardNav({
               {userRole === "SUPER_ADMIN" && (
                 <Link
                   href="/admin"
+                  prefetch={true}
                   onClick={() => setIsMobileMenuOpen(false)}
                   className="w-full p-4 brutal-card flex items-center justify-between font-mono text-sm font-black uppercase bg-[#FFDE59] text-[#0D0D0D] hover:bg-[#FFD738] transition-transform active:translate-y-0.5 mt-2"
                 >

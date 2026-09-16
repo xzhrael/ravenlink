@@ -16,24 +16,33 @@ export default async function DashboardLayout({
     redirect("/login");
   }
 
-  // Ambil data user langsung dari database untuk memastikan username dan profil selalu akurat
-  const dbUser = session.user.id
-    ? await prisma.user.findUnique({
-        where: { id: session.user.id },
-        select: {
-          username: true,
-          name: true,
-          image: true,
-          role: true,
-          email: true,
-        },
-      })
-    : null;
+  // Gunakan data dari JWT session yang sudah tersedia tanpa database round-trip
+  let username = session.user.username;
+  let userImage = session.user.image;
+  let userName = session.user.name || session.user.email || "Pengguna";
+  let userRole = session.user.role;
 
-  const username = dbUser?.username || session.user.username || "setup";
-  const userImage = dbUser?.image || session.user.image;
-  const userName = dbUser?.name || session.user.name || dbUser?.email || session.user.email || "Pengguna";
-  const userRole = dbUser?.role || session.user.role;
+  // Fallback ke database hanya jika data sesi belum lengkap (misal pengguna baru register)
+  if (!username && session.user.id) {
+    const dbUser = await prisma.user.findUnique({
+      where: { id: session.user.id },
+      select: {
+        username: true,
+        name: true,
+        image: true,
+        role: true,
+        email: true,
+      },
+    });
+    if (dbUser) {
+      username = dbUser.username;
+      userImage = dbUser.image || userImage;
+      userName = dbUser.name || dbUser.email || userName;
+      userRole = dbUser.role || userRole;
+    }
+  }
+
+  const finalUsername = username || "setup";
 
   const handleSignOut = async () => {
     "use server";
@@ -44,7 +53,7 @@ export default async function DashboardLayout({
     <SessionProvider>
       <div className="min-h-screen flex flex-col bg-[#FFF8E7] dark:bg-[#0D0D0D] text-[#0D0D0D] dark:text-[#FFF8E7]">
         <DashboardNav
-          username={username}
+          username={finalUsername}
           userName={userName}
           userRole={userRole}
           userImage={userImage}
