@@ -19,8 +19,8 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Ravenlink - Neo-Brutalist Bio-Link Platform",
-  description: "High-performance, neo-brutalist bio-link page builder with Google Auth, drag-and-drop puzzle builder, and live customization.",
+  title: "Ravenlink - Bio-Link Platform",
+  description: "High-performance bio-link page builder with Google Auth, drag-and-drop puzzle builder, and live customization.",
   icons: {
     icon: [
       { url: "/icon.png", type: "image/png" },
