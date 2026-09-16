@@ -24,6 +24,7 @@ export function AdminCreateUserModal({
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [role, setRole] = useState<"USER" | "SUPER_ADMIN">("USER");
   const [status, setStatus] = useState<"ACTIVE" | "SUSPENDED">("ACTIVE");
   const [bio, setBio] = useState("");
@@ -247,13 +248,26 @@ export function AdminCreateUserModal({
               <label className="block text-xs font-mono font-bold uppercase mb-1">
                 Password (Opsional)
               </label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Min 6 karakter"
-                className="w-full px-3 py-2 text-xs font-mono bg-white dark:bg-[#1C1B1A] brutal-border-sm focus:outline-none"
-              />
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Min 6 karakter"
+                  className="w-full pl-3 pr-9 py-2 text-xs font-mono bg-white dark:bg-[#1C1B1A] brutal-border-sm focus:outline-none"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-neutral-500 hover:text-black dark:hover:text-white transition-colors cursor-pointer select-none p-0.5 flex items-center justify-center"
+                  aria-label={showPassword ? "Sembunyikan sandi" : "Tampilkan sandi"}
+                  title={showPassword ? "Sembunyikan sandi" : "Tampilkan sandi"}
+                >
+                  <span className="material-symbols-outlined text-base leading-none">
+                    {showPassword ? "visibility_off" : "visibility"}
+                  </span>
+                </button>
+              </div>
             </div>
           </div>
 

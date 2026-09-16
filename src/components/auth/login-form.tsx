@@ -24,6 +24,10 @@ export function LoginForm() {
   const [registerEmail, setRegisterEmail] = useState("");
   const passwordInputRef = useRef<HTMLInputElement>(null);
 
+  // Password Visibility State
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
   // OTP State
   const [otpSent, setOtpSent] = useState(false);
   const [otpCode, setOtpCode] = useState("");
@@ -343,30 +347,56 @@ export function LoginForm() {
             <label className="block text-xs font-black uppercase mb-1">
               {t.auth.passwordLabel} *
             </label>
-            <input
-              type="password"
-              required
-              minLength={6}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder={t.auth.passwordPlaceholder}
-              className="w-full px-3 py-2 text-sm bg-white dark:bg-[#1C1B1A] brutal-border-sm focus:outline-none font-mono"
-            />
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                required
+                minLength={6}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder={t.auth.passwordPlaceholder}
+                className="w-full pl-3 pr-10 py-2 text-sm bg-white dark:bg-[#1C1B1A] brutal-border-sm focus:outline-none font-mono"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((prev) => !prev)}
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-neutral-500 hover:text-black dark:hover:text-white transition-colors cursor-pointer select-none p-1 flex items-center justify-center"
+                aria-label={showPassword ? "Sembunyikan sandi" : "Tampilkan sandi"}
+                title={showPassword ? "Sembunyikan sandi" : "Tampilkan sandi"}
+              >
+                <span className="material-symbols-outlined text-lg leading-none">
+                  {showPassword ? "visibility_off" : "visibility"}
+                </span>
+              </button>
+            </div>
           </div>
 
           <div>
             <label className="block text-xs font-black uppercase mb-1">
               {t.auth.confirmPasswordLabel} *
             </label>
-            <input
-              type="password"
-              required
-              minLength={6}
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              placeholder={t.auth.confirmPasswordPlaceholder}
-              className="w-full px-3 py-2 text-sm bg-white dark:bg-[#1C1B1A] brutal-border-sm focus:outline-none font-mono"
-            />
+            <div className="relative">
+              <input
+                type={showConfirmPassword ? "text" : "password"}
+                required
+                minLength={6}
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                placeholder={t.auth.confirmPasswordPlaceholder}
+                className="w-full pl-3 pr-10 py-2 text-sm bg-white dark:bg-[#1C1B1A] brutal-border-sm focus:outline-none font-mono"
+              />
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword((prev) => !prev)}
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-neutral-500 hover:text-black dark:hover:text-white transition-colors cursor-pointer select-none p-1 flex items-center justify-center"
+                aria-label={showConfirmPassword ? "Sembunyikan sandi" : "Tampilkan sandi"}
+                title={showConfirmPassword ? "Sembunyikan sandi" : "Tampilkan sandi"}
+              >
+                <span className="material-symbols-outlined text-lg leading-none">
+                  {showConfirmPassword ? "visibility_off" : "visibility"}
+                </span>
+              </button>
+            </div>
           </div>
 
           <button
@@ -553,15 +583,28 @@ export function LoginForm() {
                 <label className="block text-xs font-black uppercase mb-1">
                   {t.auth.passwordLabel}
                 </label>
-                <input
-                  ref={passwordInputRef}
-                  type="password"
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder={t.auth.passwordPlaceholder}
-                  className="w-full px-3 py-2.5 text-sm bg-white dark:bg-[#1C1B1A] brutal-border-sm focus:outline-none font-mono"
-                />
+                <div className="relative">
+                  <input
+                    ref={passwordInputRef}
+                    type={showPassword ? "text" : "password"}
+                    required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder={t.auth.passwordPlaceholder}
+                    className="w-full pl-3 pr-10 py-2.5 text-sm bg-white dark:bg-[#1C1B1A] brutal-border-sm focus:outline-none font-mono"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((prev) => !prev)}
+                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-neutral-500 hover:text-black dark:hover:text-white transition-colors cursor-pointer select-none p-1 flex items-center justify-center"
+                    aria-label={showPassword ? "Sembunyikan sandi" : "Tampilkan sandi"}
+                    title={showPassword ? "Sembunyikan sandi" : "Tampilkan sandi"}
+                  >
+                    <span className="material-symbols-outlined text-lg leading-none">
+                      {showPassword ? "visibility_off" : "visibility"}
+                    </span>
+                  </button>
+                </div>
               </div>
 
               <button

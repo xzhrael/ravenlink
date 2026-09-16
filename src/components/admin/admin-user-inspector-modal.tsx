@@ -170,6 +170,7 @@ export function AdminUserInspectorModal({
   const [editEmail, setEditEmail] = useState(user?.email || "");
   const [editUsername, setEditUsername] = useState(user?.username || "");
   const [editPassword, setEditPassword] = useState("");
+  const [showEditPassword, setShowEditPassword] = useState(false);
   const [editRole, setEditRole] = useState<"USER" | "SUPER_ADMIN">(
     (user?.role as "USER" | "SUPER_ADMIN") || "USER"
   );
@@ -581,13 +582,26 @@ export function AdminUserInspectorModal({
                     <label className="block text-[11px] font-mono font-bold uppercase mb-1">
                       Ganti Password (Opsional)
                     </label>
-                    <input
-                      type="password"
-                      value={editPassword}
-                      onChange={(e) => setEditPassword(e.target.value)}
-                      placeholder="Kosongkan jika tidak diubah"
-                      className="w-full px-3 py-2 text-xs font-mono bg-[#FFF8E7] dark:bg-[#252422] brutal-border-sm focus:outline-none"
-                    />
+                    <div className="relative">
+                      <input
+                        type={showEditPassword ? "text" : "password"}
+                        value={editPassword}
+                        onChange={(e) => setEditPassword(e.target.value)}
+                        placeholder="Kosongkan jika tidak diubah"
+                        className="w-full pl-3 pr-9 py-2 text-xs font-mono bg-[#FFF8E7] dark:bg-[#252422] brutal-border-sm focus:outline-none"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowEditPassword((prev) => !prev)}
+                        className="absolute right-2 top-1/2 -translate-y-1/2 text-neutral-500 hover:text-black dark:hover:text-white transition-colors cursor-pointer select-none p-0.5 flex items-center justify-center"
+                        aria-label={showEditPassword ? "Sembunyikan sandi" : "Tampilkan sandi"}
+                        title={showEditPassword ? "Sembunyikan sandi" : "Tampilkan sandi"}
+                      >
+                        <span className="material-symbols-outlined text-base leading-none">
+                          {showEditPassword ? "visibility_off" : "visibility"}
+                        </span>
+                      </button>
+                    </div>
                   </div>
                 </div>
 

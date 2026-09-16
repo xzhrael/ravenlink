@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { Input } from "@/components/ui/input";
@@ -32,6 +32,69 @@ export function ProfileForm({ user }: ProfileFormProps) {
   const [usernameError, setUsernameError] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [saveMessage, setSaveMessage] = useState<string | null>(null);
+
+  // Avatar Upload State
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isProcessingImage, setIsProcessingImage] = useState(false);
+  const [imageError, setImageError] = useState<string | null>(null);
+  const [showUrlInput, setShowUrlInput] = useState(false);
+
+  const handleImageFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      setImageError("Format file tidak didukung. Harap pilih gambar (JPG, PNG, atau WebP).");
+      return;
+    }
+
+    setIsProcessingImage(true);
+    setImageError(null);
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const img = new window.Image();
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        const targetSize = 320;
+        canvas.width = targetSize;
+        canvas.height = targetSize;
+        const ctx = canvas.getContext("2d");
+
+        if (!ctx) {
+          setImageError("Gagal memproses gambar.");
+          setIsProcessingImage(false);
+          return;
+        }
+
+        // Center crop to 1:1 square
+        const minDim = Math.min(img.width, img.height);
+        const sx = (img.width - minDim) / 2;
+        const sy = (img.height - minDim) / 2;
+
+        ctx.drawImage(img, sx, sy, minDim, minDim, 0, 0, targetSize, targetSize);
+
+        // Export as lightweight WebP data URL
+        const compressedDataUrl = canvas.toDataURL("image/webp", 0.85);
+        setImage(compressedDataUrl);
+        setIsProcessingImage(false);
+      };
+
+      img.onerror = () => {
+        setImageError("File gambar tidak dapat dibaca.");
+        setIsProcessingImage(false);
+      };
+
+      img.src = event.target?.result as string;
+    };
+
+    reader.onerror = () => {
+      setImageError("Gagal membaca file gambar.");
+      setIsProcessingImage(false);
+    };
+
+    reader.readAsDataURL(file);
+  };
 
   const handleUsernameChange = async (val: string) => {
     const clean = sanitizeUsername(val);
@@ -171,26 +234,118 @@ export function ProfileForm({ user }: ProfileFormProps) {
           />
         </div>
 
-        {/* Avatar URL */}
-        <Input
-          label={t.settings.avatarUrl}
-          value={image}
-          onChange={(e) => setImage(e.target.value)}
-          placeholder="https://... (URL foto profil)"
-          helperText={t.settings.avatarHelper}
-        />
-      </div>
+        {/* Avatar Upload (User-Friendly for Non-Technical Users) */}
+        <div>
+          <label className="block text-xs font-mono font-bold uppercase mb-2">
+            Foto Profil
+          </label>
 
-      {/* Save action button */}
-      <div className="flex items-center justify-between gap-4">
-        {saveMessage && (
-          <span className="text-xs font-mono font-bold text-emerald-700 dark:text-emerald-400 flex items-center gap-1">
-            <span className="material-symbols-outlined text-base">check_circle</span>
-            {saveMessage}
-          </span>
-        )}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 p-4 brutal-border-sm bg-[#FFF8E7] dark:bg-[#141414]">
+            {/* Live Avatar Preview */}
+            <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden border-2 border-black dark:border-white shadow-[3px_3px_0px_#000] dark:shadow-[3px_3px_0px_#FFF] bg-neutral-200 dark:bg-neutral-800 shrink-0 flex items-center justify-center">
+              {image ? (
+                <img
+                  src={image}
+                  alt="Pratinjau Foto Profil"
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <span className="material-symbols-outlined text-4xl text-neutral-400 select-none">
+                  person
+                </span>
+              )}
+              {isProcessingImage && (
+                <div className="absolute inset-0 bg-black/60 flex items-center justify-center text-white">
+                  <span className="material-symbols-outlined text-2xl animate-spin">
+                    progress_activity
+                  </span>
+                </div>
+              )}
+            </div>
 
-        <div className="ml-auto">
+            {/* Upload Buttons & Description */}
+            <div className="flex-1 space-y-2 min-w-0">
+              <div className="flex flex-wrap items-center gap-2">
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/png, image/jpeg, image/webp, image/gif"
+                  onChange={handleImageFileChange}
+                  className="hidden"
+                />
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={isProcessingImage}
+                  className="px-3.5 py-2 bg-[#FFDE59] text-[#0D0D0D] brutal-btn font-mono font-bold text-xs uppercase inline-flex items-center gap-1.5 cursor-pointer select-none active:translate-y-0.5"
+                >
+                  <span className="material-symbols-outlined text-base leading-none">
+                    upload
+                  </span>
+                  <span>{image ? "Ganti Foto Profil" : "Pilih Foto dari Galeri / File"}</span>
+                </button>
+
+                {image && (
+                  <button
+                    type="button"
+                    onClick={() => setImage("")}
+                    className="px-3 py-2 bg-white dark:bg-[#1C1B1A] text-rose-600 dark:text-rose-400 brutal-border-sm font-mono font-bold text-xs uppercase inline-flex items-center gap-1 hover:bg-rose-50 dark:hover:bg-rose-950/30 transition-colors cursor-pointer select-none"
+                  >
+                    <span className="material-symbols-outlined text-base leading-none">
+                      delete
+                    </span>
+                    <span>Hapus Foto</span>
+                  </button>
+                )}
+              </div>
+
+              <p className="text-[11px] font-mono text-neutral-600 dark:text-neutral-400">
+                Pilih foto dari HP atau komputer Anda (JPG, PNG, atau WebP). Foto otomatis disesuaikan secara pas.
+              </p>
+
+              {imageError && (
+                <p className="text-xs font-mono font-bold text-rose-600 dark:text-rose-400 flex items-center gap-1">
+                  <span className="material-symbols-outlined text-xs">error</span>
+                  {imageError}
+                </p>
+              )}
+
+              {/* Advanced URL Toggle */}
+              <div className="pt-1">
+                <button
+                  type="button"
+                  onClick={() => setShowUrlInput(!showUrlInput)}
+                  className="text-[11px] font-mono font-bold underline text-neutral-500 hover:text-black dark:hover:text-white cursor-pointer select-none inline-flex items-center gap-0.5"
+                >
+                  <span>{showUrlInput ? "▲ Sembunyikan opsi URL manual" : "▼ Atau tempel tautan URL gambar"}</span>
+                </button>
+                {showUrlInput && (
+                  <div className="mt-2">
+                    <input
+                      type="url"
+                      value={image}
+                      onChange={(e) => setImage(e.target.value)}
+                      placeholder="https://... (URL foto profil)"
+                      className="w-full px-3 py-2 text-xs font-mono bg-white dark:bg-[#1C1B1A] text-black dark:text-white brutal-border-sm focus:outline-none"
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Save action button inside card */}
+        <div className="flex items-center justify-between gap-4 pt-3 border-t-2 border-black/10 dark:border-white/10">
+          {saveMessage ? (
+            <span className="text-xs font-mono font-bold text-emerald-700 dark:text-emerald-400 flex items-center gap-1">
+              <span className="material-symbols-outlined text-base">check_circle</span>
+              {saveMessage}
+            </span>
+          ) : (
+            <span />
+          )}
+
           <Button
             type="submit"
             variant="accent"
