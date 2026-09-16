@@ -38,23 +38,23 @@ export function ShareButton({ title, url, accentColor = "#3772FF" }: ShareButton
   };
 
   return (
-    <div className="relative inline-block">
+    <div className="relative inline-flex items-center shrink-0">
       <button
         type="button"
         onClick={handleShare}
         aria-label={t.publicBio.shareProfile}
-        className="w-10 h-10 border-3 border-black bg-white text-black flex items-center justify-center cursor-pointer shadow-[3px_3px_0px_#000] hover:-translate-y-0.5 active:translate-y-0.5 active:shadow-none transition-transform"
+        className="h-8 w-8 brutal-border-sm bg-white dark:bg-[#1C1B1A] text-black dark:text-white flex items-center justify-center cursor-pointer shrink-0 select-none hover:-translate-y-0.5 active:translate-y-0.5 transition-transform"
         title={t.publicBio.shareProfile}
       >
-        <span className="material-symbols-outlined text-xl">
+        <span className="material-symbols-outlined text-base leading-none">
           {copied ? "check" : "share"}
         </span>
       </button>
 
       {copied && (
         <div
-          className="absolute right-0 top-12 z-20 px-3 py-1 bg-black text-white text-[11px] font-mono font-bold whitespace-nowrap animate-in fade-in"
-          style={{ boxShadow: `3px 3px 0px ${accentColor}` }}
+          className="absolute right-0 top-10 z-20 px-2.5 py-1 bg-black text-white text-[11px] font-mono font-bold whitespace-nowrap brutal-border-sm shadow-[2px_2px_0px_#000] animate-in fade-in"
+          style={{ borderColor: accentColor }}
         >
           {t.publicBio.copiedUrl}
         </div>

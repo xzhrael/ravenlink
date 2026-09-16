@@ -61,17 +61,20 @@ export function PublicBioClient({ user, visibleLinks, pageUrl }: PublicBioClient
       }}
     >
       <div className="w-full max-w-xl mx-auto flex flex-col items-center">
-        {/* Top Right Action Bar (Lang & Share) */}
-        <div className="w-full flex items-center justify-between mb-6">
+        {/* Top Action Bar (Brand + Lang & Share Controls) */}
+        <div className="w-full flex items-center justify-between mb-6 sm:mb-8">
           <Link
             href="/"
-            className="flex items-center gap-1.5 text-xs font-mono font-bold uppercase tracking-wider opacity-80 hover:opacity-100"
+            className="flex items-center gap-2 transition-transform hover:-translate-y-0.5 active:translate-y-0.5 shrink-0 select-none"
+            title="Ravenlink"
           >
-            <RavenlinkLogo size="xs" />
-            <span>Ravenlink</span>
+            <RavenlinkLogo size="sm" />
+            <span className="font-mono font-black text-xs sm:text-sm tracking-wider uppercase">
+              Ravenlink
+            </span>
           </Link>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 shrink-0">
             <LanguageSwitcher />
             <ShareButton
               title={user.name || username}
@@ -130,13 +133,25 @@ export function PublicBioClient({ user, visibleLinks, pageUrl }: PublicBioClient
         <section className="w-full space-y-3 sm:space-y-3.5">
           {visibleLinks.length === 0 ? (
             <div
-              className="p-8 text-center border-3 border-dashed border-black bg-white text-black font-mono text-xs"
-              style={{ boxShadow: "4px 4px 0px #000" }}
+              className="w-full py-10 px-6 text-center border-3 border-dashed border-black dark:border-white bg-white/95 dark:bg-[#1C1B1A]/95 text-black dark:text-white flex flex-col items-center justify-center gap-3 select-none"
+              style={{ boxShadow: cardShadow }}
             >
-              <span className="material-symbols-outlined text-3xl mb-1 block">
-                link_off
-              </span>
-              {t.publicBio.noLinks}
+              <div
+                className="w-12 h-12 brutal-border-sm flex items-center justify-center shrink-0 shadow-[2px_2px_0px_#000]"
+                style={{
+                  backgroundColor: accentColor,
+                  color: "#FFFFFF",
+                }}
+              >
+                <span className="material-symbols-outlined text-2xl font-bold leading-none">
+                  link_off
+                </span>
+              </div>
+              <div className="space-y-1 max-w-sm">
+                <p className="font-mono font-bold text-xs sm:text-sm uppercase tracking-wide">
+                  {t.publicBio.noLinks}
+                </p>
+              </div>
             </div>
           ) : (
             visibleLinks.map((link) => (
@@ -205,9 +220,9 @@ export function PublicBioClient({ user, visibleLinks, pageUrl }: PublicBioClient
       <footer className="mt-10 sm:mt-12 text-center">
         <Link
           href="/"
-          className="inline-flex items-center gap-2 px-3 py-1.5 border-2 border-black bg-white text-black text-xs font-mono font-black uppercase tracking-wider shadow-[3px_3px_0px_#000] hover:-translate-y-0.5 active:translate-y-0.5 transition-transform"
+          className="inline-flex items-center gap-2 px-3.5 py-1.5 border-2 border-black bg-white text-black text-xs font-mono font-black uppercase tracking-wider shadow-[3px_3px_0px_#000] hover:-translate-y-0.5 active:translate-y-0.5 transition-transform select-none"
         >
-          <RavenlinkLogo size="xs" />
+          <RavenlinkLogo size="sm" />
           <span>{t.publicBio.poweredBy}</span>
         </Link>
       </footer>
