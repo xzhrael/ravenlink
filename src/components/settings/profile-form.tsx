@@ -44,7 +44,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
     if (!file) return;
 
     if (!file.type.startsWith("image/")) {
-      setImageError("Format file tidak didukung. Harap pilih gambar (JPG, PNG, atau WebP).");
+      setImageError(t.settings.invalidImageFormat);
       return;
     }
 
@@ -56,13 +56,13 @@ export function ProfileForm({ user }: ProfileFormProps) {
       const img = new window.Image();
       img.onload = () => {
         const canvas = document.createElement("canvas");
-        const targetSize = 320;
+        const targetSize = 192;
         canvas.width = targetSize;
         canvas.height = targetSize;
         const ctx = canvas.getContext("2d");
 
         if (!ctx) {
-          setImageError("Gagal memproses gambar.");
+          setImageError(t.settings.imageProcessError);
           setIsProcessingImage(false);
           return;
         }
@@ -74,14 +74,14 @@ export function ProfileForm({ user }: ProfileFormProps) {
 
         ctx.drawImage(img, sx, sy, minDim, minDim, 0, 0, targetSize, targetSize);
 
-        // Export as lightweight WebP data URL
-        const compressedDataUrl = canvas.toDataURL("image/webp", 0.85);
+        // Export as ultra-lightweight WebP data URL (~4-6 KB)
+        const compressedDataUrl = canvas.toDataURL("image/webp", 0.8);
         setImage(compressedDataUrl);
         setIsProcessingImage(false);
       };
 
       img.onerror = () => {
-        setImageError("File gambar tidak dapat dibaca.");
+        setImageError(t.settings.imageReadError);
         setIsProcessingImage(false);
       };
 
@@ -89,7 +89,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
     };
 
     reader.onerror = () => {
-      setImageError("Gagal membaca file gambar.");
+      setImageError(t.settings.imageReadError);
       setIsProcessingImage(false);
     };
 
@@ -145,12 +145,11 @@ export function ProfileForm({ user }: ProfileFormProps) {
     if (!profileRes.success || !usernameRes.success) {
       setSaveMessage(`Error: ${profileRes.error || usernameRes.error}`);
     } else {
-      // Sinkronkan cookie sesi NextAuth sisi klien dan segarkan RSC server tree
+      // Sinkronkan cookie sesi NextAuth sisi klien (username & name saja, foto di database)
       await updateSession({
         user: {
           username,
           name,
-          image,
         },
       });
       router.refresh();
@@ -229,7 +228,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
             value={bio}
             onChange={(e) => setBio(e.target.value)}
             rows={3}
-            placeholder="Deskripsikan diri atau brand Anda secara ringkas..."
+            placeholder={t.settings.bioPlaceholder}
             className="w-full px-3.5 py-2.5 text-sm font-medium bg-white dark:bg-[#1C1B1A] text-black dark:text-white brutal-border-sm focus:outline-none"
           />
         </div>
@@ -237,7 +236,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
         {/* Avatar Upload (User-Friendly for Non-Technical Users) */}
         <div>
           <label className="block text-xs font-mono font-bold uppercase mb-2">
-            Foto Profil
+            {t.settings.profilePhoto}
           </label>
 
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 p-4 brutal-border-sm bg-[#FFF8E7] dark:bg-[#141414]">
@@ -246,7 +245,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
               {image ? (
                 <img
                   src={image}
-                  alt="Pratinjau Foto Profil"
+                  alt={t.settings.photoPreviewAlt}
                   className="w-full h-full object-cover"
                 />
               ) : (
@@ -282,7 +281,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
                   <span className="material-symbols-outlined text-base leading-none">
                     upload
                   </span>
-                  <span>{image ? "Ganti Foto Profil" : "Pilih Foto dari Galeri / File"}</span>
+                  <span>{image ? t.settings.changePhoto : t.settings.selectPhoto}</span>
                 </button>
 
                 {image && (
@@ -294,13 +293,13 @@ export function ProfileForm({ user }: ProfileFormProps) {
                     <span className="material-symbols-outlined text-base leading-none">
                       delete
                     </span>
-                    <span>Hapus Foto</span>
+                    <span>{t.settings.removePhoto}</span>
                   </button>
                 )}
               </div>
 
               <p className="text-[11px] font-mono text-neutral-600 dark:text-neutral-400">
-                Pilih foto dari HP atau komputer Anda (JPG, PNG, atau WebP). Foto otomatis disesuaikan secara pas.
+                {t.settings.photoHelper}
               </p>
 
               {imageError && (
@@ -317,7 +316,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
                   onClick={() => setShowUrlInput(!showUrlInput)}
                   className="text-[11px] font-mono font-bold underline text-neutral-500 hover:text-black dark:hover:text-white cursor-pointer select-none inline-flex items-center gap-0.5"
                 >
-                  <span>{showUrlInput ? "▲ Sembunyikan opsi URL manual" : "▼ Atau tempel tautan URL gambar"}</span>
+                  <span>{showUrlInput ? t.settings.hideManualUrl : t.settings.showManualUrl}</span>
                 </button>
                 {showUrlInput && (
                   <div className="mt-2">
@@ -325,7 +324,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
                       type="url"
                       value={image}
                       onChange={(e) => setImage(e.target.value)}
-                      placeholder="https://... (URL foto profil)"
+                      placeholder={t.settings.manualUrlPlaceholder}
                       className="w-full px-3 py-2 text-xs font-mono bg-white dark:bg-[#1C1B1A] text-black dark:text-white brutal-border-sm focus:outline-none"
                     />
                   </div>

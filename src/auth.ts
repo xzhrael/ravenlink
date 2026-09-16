@@ -253,7 +253,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         if (dbUser) {
           token.username = dbUser.username;
           if (dbUser.name) token.name = dbUser.name;
-          if (dbUser.image) token.picture = dbUser.image;
+          // CRITICAL: Only store lightweight HTTP/HTTPS URLs (e.g. Google avatar) in JWT cookie.
+          // NEVER store base64 data URLs here, as it causes 494 REQUEST_HEADER_TOO_LARGE.
+          token.picture =
+            dbUser.image && (dbUser.image.startsWith("http://") || dbUser.image.startsWith("https://"))
+              ? dbUser.image
+              : null;
           token.role = dbUser.role || "USER";
           token.status = dbUser.status || "ACTIVE";
           token.themeBackground = dbUser.themeBackground;
@@ -279,7 +284,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           if (freshUser) {
             token.username = freshUser.username;
             token.name = freshUser.name;
-            token.picture = freshUser.image;
+            token.picture =
+              freshUser.image && (freshUser.image.startsWith("http://") || freshUser.image.startsWith("https://"))
+                ? freshUser.image
+                : null;
             token.role = freshUser.role || "USER";
             token.status = freshUser.status || "ACTIVE";
             token.themeBackground = freshUser.themeBackground;
@@ -290,7 +298,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           const updatedUser = (session as { user?: Record<string, unknown> }).user || session;
           if (updatedUser.username !== undefined) token.username = updatedUser.username as string;
           if (updatedUser.name !== undefined) token.name = updatedUser.name as string;
-          if (updatedUser.image !== undefined) token.picture = updatedUser.image as string;
+          if (updatedUser.image !== undefined) {
+            const imgStr = updatedUser.image as string | null;
+            token.picture =
+              imgStr && (imgStr.startsWith("http://") || imgStr.startsWith("https://"))
+                ? imgStr
+                : null;
+          }
           if (updatedUser.role !== undefined) token.role = updatedUser.role as string;
           if (updatedUser.status !== undefined) token.status = updatedUser.status as string;
           if (updatedUser.themeBackground !== undefined) token.themeBackground = updatedUser.themeBackground as string;

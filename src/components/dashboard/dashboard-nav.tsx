@@ -33,6 +33,10 @@ export function DashboardNav({
   const { t } = useI18n();
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [avatarError, setAvatarError] = useState(false);
+  const resolvedAvatar = !avatarError
+    ? userImage || (username && username !== "setup" ? `/api/avatar/${username}` : null)
+    : null;
 
   // Close mobile menu automatically on navigation change
   useEffect(() => {
@@ -150,11 +154,12 @@ export function DashboardNav({
 
             {/* User badge */}
             <div className="flex items-center gap-2 pl-1 border-l-2 border-neutral-300 dark:border-neutral-700 shrink-0">
-              {userImage ? (
+              {resolvedAvatar ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
-                  src={userImage}
+                  src={resolvedAvatar}
                   alt={userName}
+                  onError={() => setAvatarError(true)}
                   className="w-8 h-8 border-2 border-black dark:border-white object-cover shrink-0"
                 />
               ) : (
@@ -233,11 +238,12 @@ export function DashboardNav({
             {/* User Account Card */}
             <div className="bg-white dark:bg-[#1C1B1A] brutal-card p-4 my-4 flex items-center justify-between gap-3">
               <div className="flex items-center gap-3 min-w-0">
-                {userImage ? (
+                {resolvedAvatar ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
-                    src={userImage}
+                    src={resolvedAvatar}
                     alt={userName}
+                    onError={() => setAvatarError(true)}
                     className="w-12 h-12 border-2 border-black dark:border-white object-cover shadow-[2px_2px_0px_#000]"
                   />
                 ) : (

@@ -28,25 +28,29 @@ export function HomeClient({ isLoggedIn, username }: HomeClientProps) {
             <span>{t.nav.brand}</span>
           </Link>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
             <LanguageSwitcher />
             <ThemeToggle />
 
             {isLoggedIn ? (
               <Link
                 href="/dashboard"
-                className="h-8 px-3.5 bg-[#FFDE59] text-[#0D0D0D] brutal-btn font-bold text-xs uppercase inline-flex items-center justify-center gap-1.5 shrink-0"
+                prefetch={true}
+                className="h-8 px-2.5 sm:px-3.5 bg-[#FFDE59] text-[#0D0D0D] brutal-btn font-bold text-xs uppercase inline-flex items-center justify-center gap-1.5 shrink-0"
+                title={t.home.ctaDashboard}
               >
-                <span className="leading-none">{t.home.ctaDashboard}</span>
-                <span className="material-symbols-outlined text-sm leading-none">arrow_forward</span>
+                <span className="material-symbols-outlined text-base leading-none">dashboard</span>
+                <span className="hidden sm:inline leading-none">{t.home.ctaDashboard}</span>
               </Link>
             ) : (
               <Link
                 href="/login"
-                className="h-8 px-3.5 bg-[#FFDE59] text-[#0D0D0D] brutal-btn font-bold text-xs uppercase inline-flex items-center justify-center gap-1.5 shrink-0"
+                prefetch={true}
+                className="h-8 px-2.5 sm:px-3.5 bg-[#FFDE59] text-[#0D0D0D] brutal-btn font-bold text-xs uppercase inline-flex items-center justify-center gap-1.5 shrink-0"
+                title={t.home.loginAccount}
               >
                 <span className="material-symbols-outlined text-base leading-none">login</span>
-                <span className="leading-none">{t.home.loginAccount}</span>
+                <span className="hidden sm:inline leading-none">{t.home.loginAccount}</span>
               </Link>
             )}
           </div>
