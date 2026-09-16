@@ -84,15 +84,6 @@ export function HomeClient({ isLoggedIn, username }: HomeClientProps) {
                 <span>{isLoggedIn ? t.home.ctaDashboard : t.home.ctaCreate}</span>
                 <span className="material-symbols-outlined text-base">arrow_forward</span>
               </Link>
-
-              <Link
-                href={`/${username}`}
-                target="_blank"
-                className="px-5 sm:px-6 py-3 sm:py-3.5 bg-[#FFF2CE] dark:bg-[#1A1A1A] text-[#0D0D0D] dark:text-[#FFF8E7] brutal-btn font-mono font-bold text-xs sm:text-sm uppercase flex items-center gap-2"
-              >
-                <span className="material-symbols-outlined text-base">visibility</span>
-                <span>{t.home.ctaPublicDemo}</span>
-              </Link>
             </div>
 
             {/* Feature Pills */}
