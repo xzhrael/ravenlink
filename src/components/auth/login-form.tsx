@@ -5,6 +5,7 @@ import { signIn } from "next-auth/react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useI18n } from "@/lib/i18n/context";
 import { sendEmailOtpAction, registerWithUsernamePasswordAction } from "@/app/actions/auth";
+import { RavenlinkLogo } from "@/components/ui/ravenlink-logo";
 
 export function LoginForm() {
   const { t } = useI18n();
@@ -238,10 +239,8 @@ export function LoginForm() {
     <div className="w-full max-w-md bg-white dark:bg-[#1C1B1A] brutal-card p-5 sm:p-8">
       {/* Header */}
       <div className="mb-6 border-b-2 border-black dark:border-[#E2DFD8] pb-4">
-        <div className="flex items-center gap-2 mb-1">
-          <span className="material-symbols-outlined text-3xl select-none">
-            dataset
-          </span>
+        <div className="flex items-center gap-2.5 mb-1">
+          <RavenlinkLogo size="md" />
           <h1 className="text-xl sm:text-2xl font-black uppercase tracking-tight">
             {authMode === "register" ? t.auth.registerTitle : t.auth.title}
           </h1>

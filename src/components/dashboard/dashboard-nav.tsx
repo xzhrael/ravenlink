@@ -7,6 +7,7 @@ import { useSession } from "next-auth/react";
 import { useI18n } from "@/lib/i18n/context";
 import { ThemeToggle } from "@/components/providers/theme-provider";
 import { LanguageSwitcher } from "@/components/ui/language-switcher";
+import { RavenlinkLogo } from "@/components/ui/ravenlink-logo";
 
 interface DashboardNavProps {
   username: string;
@@ -84,9 +85,7 @@ export function DashboardNav({
               href="/dashboard"
               className="flex items-center gap-2 font-black text-lg sm:text-xl tracking-tight uppercase shrink-0"
             >
-              <span className="material-symbols-outlined text-2xl font-bold p-1 bg-black text-white dark:bg-white dark:text-black">
-                dataset
-              </span>
+              <RavenlinkLogo size="md" />
               <span className="truncate">{t.nav.brand}</span>
             </Link>
 
@@ -210,9 +209,7 @@ export function DashboardNav({
           <div>
             <div className="flex items-center justify-between pb-4 border-b-2 border-black dark:border-white">
               <div className="flex items-center gap-2 font-black text-xl tracking-tight uppercase">
-                <span className="material-symbols-outlined text-2xl font-bold p-1 bg-black text-white dark:bg-white dark:text-black">
-                  dataset
-                </span>
+                <RavenlinkLogo size="md" />
                 <span>{t.nav.brand}</span>
               </div>
 

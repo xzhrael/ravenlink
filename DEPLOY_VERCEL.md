@@ -113,17 +113,17 @@ Dokumen ini adalah panduan langkah demi langkah untuk men-deploy **Ravenlink** k
    * **Build Command**: Biarkan `next build` (default).
 5. Buka tab **Environment Variables**, lalu tambahkan variabel-variabel penting berikut:
 
-| Nama Variabel | Nilai / Deskripsi | Contoh |
-| :--- | :--- | :--- |
-| `DATABASE_URL` | URL koneksi TiDB dari Langkah 1 | `mysql://user:pass@host:4000/db?sslaccept=strict` |
-| `AUTH_SECRET` | Kunci acak minimal 32 karakter | `openssl rand -base64 32` |
-| `NEXTAUTH_SECRET` | Kunci acak (sama dengan `AUTH_SECRET`) | `(sama dengan AUTH_SECRET)` |
-| `NEXTAUTH_URL` | Domain web Anda (gunakan HTTPS) | `https://ravenlink.vercel.app` atau `https://domainanda.com` |
-| `NEXT_PUBLIC_APP_URL` | Domain web Anda | `https://ravenlink.vercel.app` atau `https://domainanda.com` |
-| `AUTH_GOOGLE_ID` | Client ID dari Google Cloud Console | `123456-xxx.apps.googleusercontent.com` |
-| `AUTH_GOOGLE_SECRET`| Client Secret dari Google Cloud | `GOCSPX-xxxxxxx` |
-| `SUPER_ADMIN_EMAIL` | Email Anda untuk hak Super Admin | `emailanda@gmail.com` |
-| `NODE_ENV` | Mode lingkungan | `production` |
+| Nama Variabel         | Nilai / Deskripsi                      | Contoh |
+| :---                  | :---                                   | :--- |
+| `DATABASE_URL`        | URL koneksi TiDB dari Langkah 1        | `mysql://user:pass@host:4000/db?sslaccept=strict` |
+| `AUTH_SECRET`         | Kunci acak minimal 32 karakter         | `openssl rand -base64 32` |
+| `NEXTAUTH_SECRET`     | Kunci acak (sama dengan `AUTH_SECRET`) | `(sama dengan AUTH_SECRET)` |
+| `NEXTAUTH_URL`        | Domain web Anda (gunakan HTTPS)        | `https://ravenlink.vercel.app` atau `https://domainanda.com` |
+| `NEXT_PUBLIC_APP_URL` | Domain web Anda                        | `https://ravenlink.vercel.app` atau `https://domainanda.com` |
+| `AUTH_GOOGLE_ID`      | Client ID dari Google Cloud Console    | `123456-xxx.apps.googleusercontent.com` |
+| `AUTH_GOOGLE_SECRET`  | Client Secret dari Google Cloud        | `GOCSPX-xxxxxxx` |
+| `SUPER_ADMIN_EMAIL`   | Email Anda untuk hak Super Admin       | `emailanda@gmail.com` |
+| `NODE_ENV`            | Mode lingkungan                        | `production`          |
 
 6. Klik tombol **Deploy**.
 7. Tunggu proses build 1–2 menit hingga muncul kembang api tanda deploy berhasil! Anda akan langsung mendapatkan subdomain gratis seperti `https://ravenlink-xxx.vercel.app`.

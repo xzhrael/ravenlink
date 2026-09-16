@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ShareButton } from "@/components/public/share-button";
 import { LanguageSwitcher } from "@/components/ui/language-switcher";
+import { RavenlinkLogo } from "@/components/ui/ravenlink-logo";
 import { useI18n } from "@/lib/i18n/context";
 
 interface PublicBioClientProps {
@@ -66,7 +67,7 @@ export function PublicBioClient({ user, visibleLinks, pageUrl }: PublicBioClient
             href="/"
             className="flex items-center gap-1.5 text-xs font-mono font-bold uppercase tracking-wider opacity-80 hover:opacity-100"
           >
-            <span className="material-symbols-outlined text-base">dataset</span>
+            <RavenlinkLogo size="xs" />
             <span>Ravenlink</span>
           </Link>
 
@@ -204,9 +205,9 @@ export function PublicBioClient({ user, visibleLinks, pageUrl }: PublicBioClient
       <footer className="mt-10 sm:mt-12 text-center">
         <Link
           href="/"
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 border-2 border-black bg-white text-black text-xs font-mono font-black uppercase tracking-wider shadow-[3px_3px_0px_#000] hover:-translate-y-0.5 active:translate-y-0.5 transition-transform"
+          className="inline-flex items-center gap-2 px-3 py-1.5 border-2 border-black bg-white text-black text-xs font-mono font-black uppercase tracking-wider shadow-[3px_3px_0px_#000] hover:-translate-y-0.5 active:translate-y-0.5 transition-transform"
         >
-          <span className="material-symbols-outlined text-sm">bolt</span>
+          <RavenlinkLogo size="xs" />
           <span>{t.publicBio.poweredBy}</span>
         </Link>
       </footer>

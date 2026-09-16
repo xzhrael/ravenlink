@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useI18n } from "@/lib/i18n/context";
 import { ThemeToggle } from "@/components/providers/theme-provider";
 import { LanguageSwitcher } from "@/components/ui/language-switcher";
+import { RavenlinkLogo } from "@/components/ui/ravenlink-logo";
 
 interface AdminNavProps {
   userName: string;
@@ -25,9 +26,7 @@ export function AdminNav({ userName, userImage, signOutAction }: AdminNavProps) 
             href="/admin"
             className="flex items-center gap-2 font-black text-lg sm:text-xl tracking-tight uppercase shrink-0"
           >
-            <span className="material-symbols-outlined text-2xl font-bold p-1 bg-[#FFDE59] text-[#0D0D0D] border-2 border-black">
-              security
-            </span>
+            <RavenlinkLogo size="md" />
             <span className="truncate">{t.nav.brand}</span>
           </Link>
 

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useI18n } from "@/lib/i18n/context";
 import { LanguageSwitcher } from "@/components/ui/language-switcher";
 import { ThemeToggle } from "@/components/providers/theme-provider";
+import { RavenlinkLogo } from "@/components/ui/ravenlink-logo";
 
 interface HomeClientProps {
   isLoggedIn: boolean;
@@ -23,9 +24,7 @@ export function HomeClient({ isLoggedIn, username }: HomeClientProps) {
             href="/"
             className="flex items-center gap-2 font-black text-lg sm:text-xl tracking-tight uppercase"
           >
-            <span className="material-symbols-outlined text-2xl font-bold p-1 bg-[#FFDE59] text-[#0D0D0D] border-2 border-black">
-              dataset
-            </span>
+            <RavenlinkLogo size="md" />
             <span>{t.nav.brand}</span>
           </Link>
 
