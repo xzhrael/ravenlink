@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Metadata } from "next";
 import { LanguageSwitcher } from "@/components/ui/language-switcher";
 import { ThemeToggle } from "@/components/providers/theme-provider";
+import { RavenlinkLogo } from "@/components/ui/ravenlink-logo";
 
 export const metadata: Metadata = {
   title: "Masuk - Ravenlink",
@@ -19,9 +20,7 @@ export default function LoginPage() {
           href="/"
           className="group inline-flex items-center gap-2 font-black text-xl tracking-tight uppercase"
         >
-          <span className="material-symbols-outlined text-2xl font-bold leading-none select-none">
-            terminal
-          </span>
+          <RavenlinkLogo size="md" />
           <span className="group-hover:underline">RAVENLINK</span>
         </Link>
         <div className="flex items-center gap-2">
