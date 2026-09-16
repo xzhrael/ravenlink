@@ -93,7 +93,7 @@ export function DashboardNav({
               href={`/${username}`}
               target="_blank"
               rel="noreferrer"
-              className="hidden sm:inline-flex items-center gap-1 h-8 px-2.5 bg-[#FFF8E7] dark:bg-[#1A1A1A] brutal-border-sm text-xs font-mono font-bold hover:bg-[#FFF2CE] transition-colors text-[#0D0D0D] dark:text-[#FFF8E7] shrink-0 select-none"
+              className="hidden sm:inline-flex lg:hidden xl:inline-flex items-center gap-1 h-8 px-2.5 bg-[#FFF8E7] dark:bg-[#1A1A1A] brutal-border-sm text-xs font-mono font-bold hover:bg-[#FFF2CE] transition-colors text-[#0D0D0D] dark:text-[#FFF8E7] shrink-0 select-none"
               title="Buka bio-link publik di tab baru"
             >
               <span className="material-symbols-outlined text-xs leading-none">open_in_new</span>
@@ -102,7 +102,7 @@ export function DashboardNav({
           </div>
 
           {/* Desktop Navigation Tabs (Visible only on lg: 1024px and up to prevent side-by-side collisions) */}
-          <nav className="hidden lg:flex items-center gap-1.5 text-xs font-bold uppercase overflow-x-auto py-1">
+          <nav className="hidden lg:flex items-center gap-1 xl:gap-1.5 text-xs font-bold uppercase overflow-x-auto py-1">
             {navLinks.map((link) => {
               const isActive =
                 pathname === link.href ||
@@ -111,7 +111,7 @@ export function DashboardNav({
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`h-8 px-3 brutal-border-sm transition-transform active:translate-y-0.5 inline-flex items-center gap-1.5 shrink-0 select-none ${
+                  className={`h-8 px-2.5 xl:px-3 brutal-border-sm transition-transform active:translate-y-0.5 inline-flex items-center gap-1.5 shrink-0 select-none ${
                     isActive
                       ? "bg-black text-white dark:bg-white dark:text-black"
                       : link.accent
@@ -133,13 +133,13 @@ export function DashboardNav({
             {userRole === "SUPER_ADMIN" && (
               <Link
                 href="/admin"
-                className="h-8 px-2.5 bg-[#FFDE59] text-[#0D0D0D] brutal-border-sm text-xs font-mono font-black inline-flex items-center gap-1.5 hover:bg-[#FFD738] transition-colors shrink-0 select-none"
-                title="Super Admin Command Center"
+                className="h-8 px-2.5 bg-[#FFDE59] text-[#0D0D0D] brutal-border-sm text-xs font-mono font-bold inline-flex items-center gap-1 hover:bg-[#FFD738] transition-colors shrink-0 select-none"
+                title="Admin Dashboard"
               >
-                <span className="material-symbols-outlined text-sm font-black leading-none">
-                  security
+                <span className="material-symbols-outlined text-sm leading-none">
+                  shield
                 </span>
-                <span className="leading-none">Super Admin</span>
+                <span className="leading-none">Admin</span>
               </Link>
             )}
             <LanguageSwitcher />
@@ -295,7 +295,7 @@ export function DashboardNav({
                 );
               })}
 
-              {/* Super Admin Command Center Link in Mobile Menu */}
+              {/* Admin Link in Mobile Menu */}
               {userRole === "SUPER_ADMIN" && (
                 <Link
                   href="/admin"
@@ -304,9 +304,9 @@ export function DashboardNav({
                 >
                   <span className="flex items-center gap-3">
                     <span className="material-symbols-outlined text-xl">
-                      security
+                      shield
                     </span>
-                    <span>Super Admin</span>
+                    <span>Admin</span>
                   </span>
                   <span className="material-symbols-outlined text-base">
                     arrow_forward

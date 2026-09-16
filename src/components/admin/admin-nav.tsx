@@ -20,8 +20,8 @@ export function AdminNav({ userName, userImage, signOutAction }: AdminNavProps) 
   return (
     <header className="border-b-4 border-black dark:border-[#E2DFD8] bg-white dark:bg-[#1C1B1A] sticky top-0 z-40 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
-        {/* Left: Brand + Command Center Badge + Pulse */}
-        <div className="flex items-center gap-3 min-w-0">
+        {/* Left: Brand + Admin Badge */}
+        <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
           <Link
             href="/admin"
             className="flex items-center gap-2 font-black text-lg sm:text-xl tracking-tight uppercase shrink-0"
@@ -30,22 +30,18 @@ export function AdminNav({ userName, userImage, signOutAction }: AdminNavProps) 
             <span className="truncate">{t.nav.brand}</span>
           </Link>
 
-          <span className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-0.5 bg-black text-white dark:bg-white dark:text-black font-mono text-[11px] font-black uppercase tracking-wider brutal-border-sm shrink-0">
+          <span className="inline-flex items-center px-2 py-0.5 bg-black text-white dark:bg-white dark:text-black font-mono text-[10px] sm:text-[11px] font-black uppercase tracking-wider brutal-border-sm shrink-0">
             {t.admin.badge}
-          </span>
-
-          <span className="hidden lg:inline-flex items-center gap-1.5 px-2 py-0.5 bg-[#06D6A0]/20 text-[#06D6A0] font-mono text-[10px] font-black uppercase border border-[#06D6A0] shrink-0">
-            <span className="w-2 h-2 rounded-full bg-[#06D6A0] animate-pulse inline-block" />
-            <span>{t.admin.systemActive}</span>
           </span>
         </div>
 
         {/* Desktop Controls (Visible on md: and up) */}
-        <div className="hidden md:flex items-center gap-2.5 shrink-0">
+        <div className="hidden md:flex items-center gap-2 shrink-0">
           {/* Switch to User Dashboard Button */}
           <Link
             href="/dashboard"
-            className="h-8 px-3 bg-[#FFF8E7] dark:bg-[#252422] text-[#0D0D0D] dark:text-[#FFF8E7] brutal-border-sm text-xs font-mono font-bold inline-flex items-center gap-1.5 hover:bg-[#FFF2CE] dark:hover:bg-neutral-800 transition-colors select-none"
+            className="h-8 px-2.5 sm:px-3 bg-[#FFDE59] text-[#0D0D0D] brutal-border-sm text-xs font-mono font-bold inline-flex items-center gap-1.5 hover:bg-[#FFD738] transition-colors select-none"
+            title="Dashboard"
           >
             <span className="material-symbols-outlined text-sm leading-none">dashboard</span>
             <span className="leading-none">{t.admin.backToUserDashboard}</span>
@@ -111,7 +107,6 @@ export function AdminNav({ userName, userImage, signOutAction }: AdminNavProps) 
             <span className="px-2 py-0.5 bg-black text-white dark:bg-white dark:text-black">
               {t.admin.badge}
             </span>
-            <span className="text-[#06D6A0]">● {t.admin.systemActive}</span>
           </div>
 
           <Link

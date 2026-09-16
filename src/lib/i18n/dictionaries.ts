@@ -313,9 +313,9 @@ export const dictionaries = {
       claimPrompt: "Klaim Username Anda di Ravenlink →",
     },
     admin: {
-      badge: "SUPER ADMIN COMMAND CENTER",
+      badge: "ADMIN",
       systemActive: "LIVE TELEMETRI",
-      backToUserDashboard: "Ke Dashboard User",
+      backToUserDashboard: "Dashboard",
       header: {
         enterpriseBadge: "Enterprise Dashboard",
         controlCenter: "v1.0 • Pusat Kendali Global",
@@ -786,9 +786,9 @@ export const dictionaries = {
       claimPrompt: "Claim Your Username on Ravenlink →",
     },
     admin: {
-      badge: "SUPER ADMIN COMMAND CENTER",
+      badge: "ADMIN",
       systemActive: "LIVE TELEMETRY",
-      backToUserDashboard: "To User Dashboard",
+      backToUserDashboard: "Dashboard",
       header: {
         enterpriseBadge: "Enterprise Dashboard",
         controlCenter: "v1.0 • Global Control Center",

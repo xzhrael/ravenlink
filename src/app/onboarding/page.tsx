@@ -65,7 +65,7 @@ export default function OnboardingPage() {
           </h1>
         </div>
         <p className="text-sm text-neutral-600 dark:text-neutral-400 mb-6 font-medium">
-          Tentukan alamat URL publik untuk halaman linktree pribadi Anda. Alamat ini akan dapat diakses oleh semua pengunjung.
+          Tentukan alamat URL publik untuk halaman bio-link pribadi Anda. Alamat ini akan dapat diakses oleh semua pengunjung.
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-6">

@@ -287,14 +287,6 @@ export function ContentBuilder({
         {/* Top Header */}
         <div className="bg-white dark:bg-[#1C1B1A] brutal-card p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <div className="flex items-center gap-2 mb-1">
-              <span className="text-xs font-mono font-bold uppercase px-2 py-0.5 bg-[#FFDE59] text-[#0D0D0D] border border-black">
-                {t.builder.badge}
-              </span>
-              <span className="text-xs font-mono text-neutral-500">
-                {t.builder.subBadge}
-              </span>
-            </div>
             <h1 className="text-xl md:text-2xl font-black uppercase tracking-tight flex items-center gap-2">
               <span className="material-symbols-outlined text-2xl">extension</span>
               <span>{t.builder.title}</span>

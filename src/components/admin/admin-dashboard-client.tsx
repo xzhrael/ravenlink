@@ -143,14 +143,6 @@ export function AdminDashboardClient({
       {/* Top Banner Header */}
       <div className="bg-white dark:bg-[#1C1B1A] brutal-card p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2 mb-1">
-            <span className="text-xs font-mono font-black uppercase px-2.5 py-0.5 bg-[#FFDE59] text-[#0D0D0D] border border-black">
-              {t.admin.header.enterpriseBadge}
-            </span>
-            <span className="text-xs font-mono text-neutral-500 font-bold">
-              {t.admin.header.controlCenter}
-            </span>
-          </div>
           <h1 className="text-xl md:text-2xl font-black uppercase tracking-tight flex items-center gap-2">
             <span className="material-symbols-outlined text-2xl">admin_panel_settings</span>
             <span>{t.admin.header.title}</span>
@@ -293,9 +285,6 @@ export function AdminDashboardClient({
               <div className="text-xl font-black text-[#06D6A0] uppercase tracking-wider flex items-center gap-1.5 mt-1">
                 <span className="w-3 h-3 rounded-full bg-[#06D6A0] animate-ping" />
                 <span>{t.admin.telemetry.systemOperational}</span>
-              </div>
-              <div className="text-xs font-mono text-neutral-600 dark:text-neutral-400 pt-1">
-                {t.admin.telemetry.systemSubtitle}
               </div>
             </div>
           </div>
