@@ -122,7 +122,7 @@ export function LinkFormModal({
       onSuccess();
       onClose();
     } else {
-      setErrorMessage(res.error || "Gagal menyimpan link.");
+      setErrorMessage(res.error || t.links.saveError);
     }
   };
 

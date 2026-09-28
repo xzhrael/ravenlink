@@ -29,7 +29,7 @@ export function DangerZone({ userRole }: DangerZoneProps) {
       await signOut({ callbackUrl: "/login" });
     } else {
       setIsDeleting(false);
-      setErrorMessage(res.error || "Gagal menghapus akun.");
+      setErrorMessage(res.error || t.settings.accountDeleteError);
     }
   };
 

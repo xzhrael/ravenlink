@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
+import { useI18n } from "@/lib/i18n/context";
 
 export interface IconItem {
   name: string;
@@ -87,6 +88,7 @@ export function MaterialIconPicker({
   value,
   onChange,
 }: MaterialIconPickerProps) {
+  const { t } = useI18n();
   const [search, setSearch] = useState("");
   const [selectedCat, setSelectedCat] = useState<string>("all");
 
@@ -107,7 +109,7 @@ export function MaterialIconPicker({
       <div className="flex items-center justify-between p-2.5 bg-[#F4F0EA] dark:bg-[#252422] brutal-border-sm">
         <div className="flex items-center gap-2">
           <span className="text-xs font-mono font-bold uppercase text-neutral-600 dark:text-neutral-400">
-            Icon Terpilih:
+            {t.iconPicker.selectedIcon}
           </span>
           {value ? (
             <div className="flex items-center gap-1.5 px-2 py-0.5 bg-white dark:bg-[#1C1B1A] border-2 border-black dark:border-white text-xs font-mono font-bold">
@@ -118,7 +120,7 @@ export function MaterialIconPicker({
             </div>
           ) : (
             <span className="text-xs font-mono italic text-neutral-500">
-              (Belum ada icon terpilih)
+              {t.iconPicker.noIconSelected}
             </span>
           )}
         </div>
@@ -129,7 +131,7 @@ export function MaterialIconPicker({
             onClick={() => onChange("")}
             className="text-[11px] font-mono font-bold text-rose-600 hover:underline cursor-pointer"
           >
-            Hapus Icon
+            {t.iconPicker.removeIcon}
           </button>
         )}
       </div>
@@ -144,20 +146,20 @@ export function MaterialIconPicker({
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Cari icon (cth: video, toko, chat, musik, code)..."
+            placeholder={t.iconPicker.searchPlaceholder}
             className="w-full pl-9 pr-3 py-2 text-xs font-mono bg-white dark:bg-[#1C1B1A] brutal-border-sm focus:outline-none"
           />
         </div>
 
         <div className="flex flex-wrap gap-1 text-[10px] font-mono font-bold uppercase">
           {[
-            { id: "all", label: "Semua" },
-            { id: "social", label: "Sosial" },
-            { id: "media", label: "Media" },
-            { id: "commerce", label: "Toko" },
-            { id: "work", label: "Karya" },
-            { id: "contact", label: "Kontak" },
-            { id: "general", label: "Umum" },
+            { id: "all", label: t.iconPicker.catAll },
+            { id: "social", label: t.iconPicker.catSocial },
+            { id: "media", label: t.iconPicker.catMedia },
+            { id: "commerce", label: t.iconPicker.catCommerce },
+            { id: "work", label: t.iconPicker.catWork },
+            { id: "contact", label: t.iconPicker.catContact },
+            { id: "general", label: t.iconPicker.catGeneral },
           ].map((cat) => (
             <button
               key={cat.id}
@@ -203,7 +205,7 @@ export function MaterialIconPicker({
 
         {filteredIcons.length === 0 && (
           <div className="col-span-full py-6 text-center text-xs font-mono text-neutral-500">
-            Tidak ada icon yang cocok dengan &quot;{search}&quot;.
+            {t.iconPicker.noIconsFound}
           </div>
         )}
       </div>

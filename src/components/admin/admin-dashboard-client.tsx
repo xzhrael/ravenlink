@@ -95,7 +95,12 @@ export function AdminDashboardClient({
   // Create User Success Handler
   const handleCreateUserSuccess = (newUser: AdminUserListItem) => {
     setUsers((prev) => [newUser, ...prev]);
-    showFeedback(`Pengguna @${newUser.username || newUser.name} berhasil ditambahkan.`);
+    showFeedback(
+      t.admin.prompts.userCreatedFeedback.replace(
+        "{username}",
+        newUser.username || newUser.name || "user"
+      )
+    );
     refreshStats();
   };
 

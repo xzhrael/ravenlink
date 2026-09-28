@@ -13,6 +13,7 @@ import type {
   AdminThemeOverrideInput,
   AdminCreateUserInput,
   AdminUpdateUserInput,
+  AdminCreateLinkInput,
   AdminActivityType,
 } from "@/types/admin";
 
@@ -951,4 +952,134 @@ export async function adminUpdateUserAction(
     };
   }
 }
+
+function normalizeAdminUrl(input: string): string {
+  let trimmed = input.trim();
+  if (!/^https?:\/\//i.test(trimmed)) {
+    trimmed = "https://" + trimmed;
+  }
+  return trimmed;
+}
+
+function isValidAdminUrl(urlStr: string): boolean {
+  try {
+    const parsed = new URL(normalizeAdminUrl(urlStr));
+    return parsed.protocol === "http:" || parsed.protocol === "https:";
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * 12. Super Admin create a new link on behalf of a specific user
+ */
+export async function adminCreateLinkForUserAction(
+  data: AdminCreateLinkInput
+): Promise<{
+  success: boolean;
+  link?: AdminUserDetail["links"][number];
+  error?: string;
+}> {
+  try {
+    const { adminUser } = await verifySuperAdmin();
+
+    if (!data.targetUserId) {
+      return { success: false, error: "Target pengguna tidak valid." };
+    }
+
+    const targetUser = await prisma.user.findUnique({
+      where: { id: data.targetUserId },
+      select: { id: true, name: true, username: true },
+    });
+
+    if (!targetUser) {
+      return { success: false, error: "Pengguna tujuan tidak ditemukan." };
+    }
+
+    if (!data.title || data.title.trim().length === 0) {
+      return { success: false, error: "Judul link wajib diisi." };
+    }
+
+    if (!data.url || !isValidAdminUrl(data.url)) {
+      return { success: false, error: "Format URL tujuan tidak valid (harus berupa URL valid)." };
+    }
+
+    const cleanUrl = normalizeAdminUrl(data.url);
+
+    // Determine next position for target user
+    const maxPositionLink = await prisma.link.findFirst({
+      where: { userId: targetUser.id },
+      orderBy: { position: "desc" },
+      select: { position: true },
+    });
+
+    const nextPosition = maxPositionLink !== null ? maxPositionLink.position + 1 : 0;
+
+    const newLink = await prisma.link.create({
+      data: {
+        userId: targetUser.id,
+        title: data.title.trim(),
+        url: cleanUrl,
+        icon: data.icon?.trim() || null,
+        subtitle: data.subtitle?.trim() || null,
+        customThumbnail: data.customThumbnail?.trim() || null,
+        isActive: data.isActive !== undefined ? data.isActive : true,
+        position: nextPosition,
+        category: data.category?.trim() || "CUSTOM",
+      },
+    });
+
+    // Record audit activity log
+    await recordActivityLog({
+      type: "LINK_CREATED",
+      title: `Link Dibuat Admin untuk @${targetUser.username || targetUser.name || "user"}: "${newLink.title}"`,
+      subtitle: `Dibuat oleh Super Admin @${adminUser.email} • Kategori: ${newLink.category}`,
+      actorId: adminUser.id,
+      actorName: adminUser.email,
+      targetId: newLink.id,
+      targetName: newLink.title,
+      metadata: {
+        targetUserId: targetUser.id,
+        targetUsername: targetUser.username,
+        url: newLink.url,
+        category: newLink.category,
+        createdByAdmin: true,
+      },
+    });
+
+    revalidatePath("/admin");
+    if (targetUser.username) {
+      revalidatePath(`/${targetUser.username}`);
+    }
+    revalidatePath("/dashboard/links");
+    revalidatePath("/dashboard/builder");
+
+    return {
+      success: true,
+      link: {
+        id: newLink.id,
+        title: newLink.title,
+        url: newLink.url,
+        icon: newLink.icon,
+        subtitle: newLink.subtitle,
+        customThumbnail: newLink.customThumbnail,
+        isActive: newLink.isActive,
+        clicks: newLink.clicks,
+        position: newLink.position,
+        category: newLink.category,
+        startDate: newLink.startDate,
+        endDate: newLink.endDate,
+        createdAt: newLink.createdAt,
+        updatedAt: newLink.updatedAt,
+      },
+    };
+  } catch (error) {
+    console.error("Error adminCreateLinkForUserAction:", error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Gagal membuat link untuk pengguna.",
+    };
+  }
+}
+
 

@@ -27,6 +27,7 @@ import {
   adminDeleteUserLinkAction,
   adminReorderUserLinksAction,
   adminUpdateUserAction,
+  adminCreateLinkForUserAction,
 } from "@/app/actions/admin";
 import { checkUsernameAction } from "@/app/actions/user";
 import { sanitizeUsername } from "@/lib/username";
@@ -203,6 +204,17 @@ export function AdminUserInspectorModal({
   const [themeSaved, setThemeSaved] = useState(false);
   const [busyLinkId, setBusyLinkId] = useState<string | null>(null);
 
+  // Admin Create Link on behalf of User
+  const [isCreateLinkOpen, setIsCreateLinkOpen] = useState(false);
+  const [newLinkTitle, setNewLinkTitle] = useState("");
+  const [newLinkUrl, setNewLinkUrl] = useState("");
+  const [newLinkCategory, setNewLinkCategory] = useState("CUSTOM");
+  const [newLinkSubtitle, setNewLinkSubtitle] = useState("");
+  const [newLinkIcon, setNewLinkIcon] = useState("");
+  const [isCreatingLink, setIsCreatingLink] = useState(false);
+  const [createLinkError, setCreateLinkError] = useState<string | null>(null);
+  const [createLinkSuccess, setCreateLinkSuccess] = useState<string | null>(null);
+
   // Configure dnd-kit sensors
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -229,6 +241,14 @@ export function AdminUserInspectorModal({
       setProfileSavedMessage(null);
       setProfileErrorMessage(null);
       setUsernameCheckError(null);
+      setIsCreateLinkOpen(false);
+      setNewLinkTitle("");
+      setNewLinkUrl("");
+      setNewLinkCategory("CUSTOM");
+      setNewLinkSubtitle("");
+      setNewLinkIcon("");
+      setCreateLinkError(null);
+      setCreateLinkSuccess(null);
       setLinks([...user.links].sort((a, b) => a.position - b.position));
       setThemeSettings({
         themeBackground: user.themeBackground || "#FFF8E7",
@@ -289,12 +309,12 @@ export function AdminUserInspectorModal({
     setIsSavingProfile(false);
 
     if (res.success && res.user) {
-      setProfileSavedMessage("Data profil dan akun pengguna berhasil disimpan.");
+      setProfileSavedMessage(t.admin.inspector.profileUpdatedSuccess);
       setEditPassword("");
       setTimeout(() => setProfileSavedMessage(null), 3500);
       onRefresh();
     } else {
-      setProfileErrorMessage(res.error || "Gagal memperbarui data pengguna.");
+      setProfileErrorMessage(res.error || t.admin.inspector.profileUpdateError);
     }
   };
 
@@ -371,6 +391,51 @@ export function AdminUserInspectorModal({
       alert(res.error || t.admin.inspector.errorDeleteLink);
     } else {
       onRefresh();
+    }
+  };
+
+  const handleCreateLink = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!user) return;
+    if (!newLinkTitle.trim()) {
+      setCreateLinkError(t.admin.inspector.inputLinkTitleRequired);
+      return;
+    }
+    if (!newLinkUrl.trim()) {
+      setCreateLinkError(t.admin.inspector.inputLinkUrlRequired);
+      return;
+    }
+
+    setIsCreatingLink(true);
+    setCreateLinkError(null);
+    setCreateLinkSuccess(null);
+
+    const res = await adminCreateLinkForUserAction({
+      targetUserId: user.id,
+      title: newLinkTitle.trim(),
+      url: newLinkUrl.trim(),
+      category: newLinkCategory,
+      subtitle: newLinkSubtitle.trim() || undefined,
+      icon: newLinkIcon.trim() || undefined,
+    });
+
+    setIsCreatingLink(false);
+
+    if (res.success && res.link) {
+      setCreateLinkSuccess(t.admin.inspector.linkCreatedSuccess);
+      setNewLinkTitle("");
+      setNewLinkUrl("");
+      setNewLinkSubtitle("");
+      setNewLinkIcon("");
+      setNewLinkCategory("CUSTOM");
+      setLinks((prev) => [...prev, res.link!].sort((a, b) => a.position - b.position));
+      setTimeout(() => {
+        setCreateLinkSuccess(null);
+        setIsCreateLinkOpen(false);
+      }, 1800);
+      onRefresh();
+    } else {
+      setCreateLinkError(res.error || t.admin.inspector.linkCreateFailed);
     }
   };
 
@@ -463,7 +528,7 @@ export function AdminUserInspectorModal({
                 }`}
               >
                 <span className="material-symbols-outlined text-base">manage_accounts</span>
-                <span>Profil & Akun</span>
+                <span>{t.admin.inspector.tabProfileAndAccount}</span>
               </button>
               <button
                 type="button"
@@ -500,7 +565,7 @@ export function AdminUserInspectorModal({
                 <div className="flex items-center justify-between pb-2 border-b-2 border-black dark:border-white">
                   <h3 className="font-mono text-xs font-black uppercase flex items-center gap-1.5">
                     <span className="material-symbols-outlined text-base">manage_accounts</span>
-                    <span>Edit Profil & Kredensial Pengguna</span>
+                    <span>{t.admin.inspector.profileTitle}</span>
                   </h3>
                 </div>
 
@@ -522,7 +587,7 @@ export function AdminUserInspectorModal({
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
                     <label className="block text-[11px] font-mono font-bold uppercase mb-1">
-                      Nama Pengguna *
+                      {t.admin.inspector.inputFullName}
                     </label>
                     <input
                       type="text"
@@ -534,7 +599,7 @@ export function AdminUserInspectorModal({
                   </div>
                   <div>
                     <label className="block text-[11px] font-mono font-bold uppercase mb-1">
-                      Alamat Email *
+                      {t.admin.inspector.inputEmail}
                     </label>
                     <input
                       type="email"
@@ -550,7 +615,7 @@ export function AdminUserInspectorModal({
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
                     <label className="block text-[11px] font-mono font-bold uppercase mb-1">
-                      Username / Alamat Bio *
+                      {t.admin.inspector.inputUsernameBio}
                     </label>
                     <div className="flex items-stretch brutal-border-sm bg-[#FFF2CE] dark:bg-[#252422]">
                       <span className="px-2 py-2 text-[11px] font-mono font-bold text-neutral-500 border-r border-black select-none flex items-center">
@@ -567,7 +632,7 @@ export function AdminUserInspectorModal({
                     {usernameCheckLoading && (
                       <div className="text-[10px] font-mono text-neutral-500 mt-1 flex items-center gap-1">
                         <span className="material-symbols-outlined text-xs animate-spin">progress_activity</span>
-                        Memeriksa ketersediaan...
+                        {t.admin.inspector.checkingAvailability}
                       </div>
                     )}
                     {usernameCheckError && (
@@ -580,22 +645,22 @@ export function AdminUserInspectorModal({
 
                   <div>
                     <label className="block text-[11px] font-mono font-bold uppercase mb-1">
-                      Ganti Password (Opsional)
+                      {t.admin.inspector.inputPasswordOptional}
                     </label>
                     <div className="relative">
                       <input
                         type={showEditPassword ? "text" : "password"}
                         value={editPassword}
                         onChange={(e) => setEditPassword(e.target.value)}
-                        placeholder="Kosongkan jika tidak diubah"
+                        placeholder={t.admin.inspector.inputPasswordPlaceholder}
                         className="w-full pl-3 pr-9 py-2 text-xs font-mono bg-[#FFF8E7] dark:bg-[#252422] brutal-border-sm focus:outline-none"
                       />
                       <button
                         type="button"
                         onClick={() => setShowEditPassword((prev) => !prev)}
                         className="absolute right-2 top-1/2 -translate-y-1/2 text-neutral-500 hover:text-black dark:hover:text-white transition-colors cursor-pointer select-none p-0.5 flex items-center justify-center"
-                        aria-label={showEditPassword ? "Sembunyikan sandi" : "Tampilkan sandi"}
-                        title={showEditPassword ? "Sembunyikan sandi" : "Tampilkan sandi"}
+                        aria-label={showEditPassword ? t.admin.inspector.hidePassword : t.admin.inspector.showPassword}
+                        title={showEditPassword ? t.admin.inspector.hidePassword : t.admin.inspector.showPassword}
                       >
                         <span className="material-symbols-outlined text-base leading-none">
                           {showEditPassword ? "visibility_off" : "visibility"}
@@ -609,7 +674,7 @@ export function AdminUserInspectorModal({
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
                   <div>
                     <label className="block text-[11px] font-mono font-bold uppercase mb-1">
-                      Hak Akses (Role)
+                      {t.admin.inspector.labelRole}
                     </label>
                     <div className="flex gap-2">
                       <button
@@ -639,7 +704,7 @@ export function AdminUserInspectorModal({
 
                   <div>
                     <label className="block text-[11px] font-mono font-bold uppercase mb-1">
-                      Status Akun
+                      {t.admin.inspector.labelStatus}
                     </label>
                     <div className="flex gap-2">
                       <button
@@ -671,26 +736,26 @@ export function AdminUserInspectorModal({
                 {/* Avatar URL & Bio */}
                 <div>
                   <label className="block text-[11px] font-mono font-bold uppercase mb-1">
-                    URL Foto Avatar (Opsional)
+                    {t.admin.inspector.inputAvatarUrl}
                   </label>
                   <input
                     type="text"
                     value={editImage}
                     onChange={(e) => setEditImage(e.target.value)}
-                    placeholder="https://... (URL gambar)"
+                    placeholder={t.admin.inspector.inputAvatarUrlPlaceholder}
                     className="w-full px-3 py-2 text-xs font-mono bg-[#FFF8E7] dark:bg-[#252422] brutal-border-sm focus:outline-none"
                   />
                 </div>
 
                 <div>
                   <label className="block text-[11px] font-mono font-bold uppercase mb-1">
-                    Bio Profil
+                    {t.admin.inspector.labelBio}
                   </label>
                   <textarea
                     value={editBio}
                     onChange={(e) => setEditBio(e.target.value)}
                     rows={2}
-                    placeholder="Deskripsi singkat profil kreator..."
+                    placeholder={t.admin.inspector.labelBioPlaceholder}
                     className="w-full px-3 py-2 text-xs font-mono bg-[#FFF8E7] dark:bg-[#252422] brutal-border-sm focus:outline-none"
                   />
                 </div>
@@ -705,7 +770,7 @@ export function AdminUserInspectorModal({
                     disabled={!!usernameCheckError}
                   >
                     <span className="material-symbols-outlined text-sm">save</span>
-                    <span>Simpan Perubahan Pengguna</span>
+                    <span>{isSavingProfile ? t.admin.inspector.btnSavingUserProfile : t.admin.inspector.btnSaveUserProfile}</span>
                   </Button>
                 </div>
               </form>
@@ -714,25 +779,176 @@ export function AdminUserInspectorModal({
             {/* TAB 2: User's Public Links */}
             {activeTab === "links" && (
               <div className="bg-white dark:bg-[#1C1B1A] brutal-card p-4 space-y-3">
-                <div className="flex items-center justify-between pb-2 border-b-2 border-black dark:border-white">
-                  <h3 className="font-mono text-xs font-black uppercase flex items-center gap-1.5">
-                    <span className="material-symbols-outlined text-base">format_list_bulleted</span>
-                    <span>{t.admin.inspector.registeredLinks} ({links.length})</span>
-                  </h3>
-                  <div className="flex items-center gap-2 text-[11px] font-mono text-neutral-500">
-                    {isReordering ? (
-                      <span className="flex items-center gap-1 text-amber-600 dark:text-amber-400 font-bold animate-pulse">
-                        <span className="material-symbols-outlined text-xs animate-spin">sync</span>
-                        <span>{t.admin.inspector.reorderSaving}</span>
-                      </span>
-                    ) : (
-                      <span className="flex items-center gap-1">
-                        <span className="material-symbols-outlined text-xs">drag_pan</span>
-                        <span>{t.admin.inspector.reorderDragHint}</span>
-                      </span>
-                    )}
+                <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b-2 border-black dark:border-white">
+                  <div className="flex items-center gap-3">
+                    <h3 className="font-mono text-xs font-black uppercase flex items-center gap-1.5">
+                      <span className="material-symbols-outlined text-base">format_list_bulleted</span>
+                      <span>{t.admin.inspector.registeredLinks} ({links.length})</span>
+                    </h3>
+                    <div className="hidden sm:flex items-center gap-2 text-[11px] font-mono text-neutral-500">
+                      {isReordering ? (
+                        <span className="flex items-center gap-1 text-amber-600 dark:text-amber-400 font-bold animate-pulse">
+                          <span className="material-symbols-outlined text-xs animate-spin">sync</span>
+                          <span>{t.admin.inspector.reorderSaving}</span>
+                        </span>
+                      ) : (
+                        <span className="flex items-center gap-1">
+                          <span className="material-symbols-outlined text-xs">drag_pan</span>
+                          <span>{t.admin.inspector.reorderDragHint}</span>
+                        </span>
+                      )}
+                    </div>
                   </div>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsCreateLinkOpen(!isCreateLinkOpen);
+                      setCreateLinkError(null);
+                      setCreateLinkSuccess(null);
+                    }}
+                    className="px-2.5 py-1.5 bg-[#FFDE59] text-[#0D0D0D] brutal-border-sm font-mono font-bold text-xs flex items-center gap-1 shadow-[2px_2px_0px_#000] hover:bg-[#FFE8A3] transition-all cursor-pointer"
+                  >
+                    <span className="material-symbols-outlined text-sm">
+                      {isCreateLinkOpen ? "close" : "add_circle"}
+                    </span>
+                    <span>{isCreateLinkOpen ? t.admin.inspector.btnCancelCreateLink : t.admin.inspector.createLinkBtn}</span>
+                  </button>
                 </div>
+
+                {/* Expandable Form: Add Link for User */}
+                {isCreateLinkOpen && (
+                  <div className="p-3 sm:p-4 bg-[#FFF8E7] dark:bg-[#252422] brutal-border-sm border-2 border-black dark:border-white space-y-3 shadow-[3px_3px_0px_#000]">
+                    <div className="flex items-center justify-between">
+                      <h4 className="font-mono text-xs font-black uppercase flex items-center gap-1.5 text-[#0D0D0D] dark:text-[#FFF8E7]">
+                        <span className="material-symbols-outlined text-sm">add_link</span>
+                        <span>{t.admin.inspector.createLinkModalTitle}</span>
+                      </h4>
+                      <p className="hidden sm:block text-[10px] font-mono text-neutral-500">
+                        {t.admin.inspector.createLinkDesc}
+                      </p>
+                    </div>
+
+                    {createLinkError && (
+                      <div className="p-2 bg-rose-100 dark:bg-rose-950/60 border border-rose-500 text-rose-700 dark:text-rose-300 font-mono text-xs flex items-center gap-1.5">
+                        <span className="material-symbols-outlined text-sm">error</span>
+                        <span>{createLinkError}</span>
+                      </div>
+                    )}
+
+                    {createLinkSuccess && (
+                      <div className="p-2 bg-emerald-100 dark:bg-emerald-950/60 border border-emerald-500 text-emerald-700 dark:text-emerald-300 font-mono text-xs flex items-center gap-1.5">
+                        <span className="material-symbols-outlined text-sm">check_circle</span>
+                        <span>{createLinkSuccess}</span>
+                      </div>
+                    )}
+
+                    <form onSubmit={handleCreateLink} className="space-y-3">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                        {/* Title */}
+                        <div>
+                          <label className="block text-[10px] font-mono font-bold uppercase mb-1 text-[#0D0D0D] dark:text-[#FFF8E7]">
+                            {t.admin.inspector.inputLinkTitle} <span className="text-rose-500">*</span>
+                          </label>
+                          <input
+                            type="text"
+                            value={newLinkTitle}
+                            onChange={(e) => setNewLinkTitle(e.target.value)}
+                            placeholder={t.admin.inspector.inputLinkTitlePlaceholder}
+                            required
+                            className="w-full px-2.5 py-1.5 text-xs font-mono bg-white dark:bg-[#1C1B1A] brutal-border-sm focus:outline-none"
+                          />
+                        </div>
+
+                        {/* URL */}
+                        <div>
+                          <label className="block text-[10px] font-mono font-bold uppercase mb-1 text-[#0D0D0D] dark:text-[#FFF8E7]">
+                            {t.admin.inspector.inputLinkUrl} <span className="text-rose-500">*</span>
+                          </label>
+                          <input
+                            type="text"
+                            value={newLinkUrl}
+                            onChange={(e) => setNewLinkUrl(e.target.value)}
+                            placeholder={t.admin.inspector.inputLinkUrlPlaceholder}
+                            required
+                            className="w-full px-2.5 py-1.5 text-xs font-mono bg-white dark:bg-[#1C1B1A] brutal-border-sm focus:outline-none"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                        {/* Category */}
+                        <div>
+                          <label className="block text-[10px] font-mono font-bold uppercase mb-1 text-[#0D0D0D] dark:text-[#FFF8E7]">
+                            {t.admin.inspector.inputLinkCategory}
+                          </label>
+                          <select
+                            value={newLinkCategory}
+                            onChange={(e) => setNewLinkCategory(e.target.value)}
+                            className="w-full px-2.5 py-1.5 text-xs font-mono bg-white dark:bg-[#1C1B1A] brutal-border-sm focus:outline-none cursor-pointer"
+                          >
+                            <option value="CUSTOM">{t.admin.inspector.categoryCustom}</option>
+                            <option value="SOCIAL">{t.admin.inspector.categorySocial}</option>
+                            <option value="PRODUCT">{t.admin.inspector.categoryProduct}</option>
+                            <option value="CONTACT">{t.admin.inspector.categoryContact}</option>
+                          </select>
+                        </div>
+
+                        {/* Icon (optional) */}
+                        <div>
+                          <label className="block text-[10px] font-mono font-bold uppercase mb-1 text-[#0D0D0D] dark:text-[#FFF8E7]">
+                            {t.admin.inspector.inputLinkIcon}
+                          </label>
+                          <input
+                            type="text"
+                            value={newLinkIcon}
+                            onChange={(e) => setNewLinkIcon(e.target.value)}
+                            placeholder={t.admin.inspector.inputLinkIconPlaceholder}
+                            className="w-full px-2.5 py-1.5 text-xs font-mono bg-white dark:bg-[#1C1B1A] brutal-border-sm focus:outline-none"
+                          />
+                        </div>
+
+                        {/* Subtitle (optional) */}
+                        <div>
+                          <label className="block text-[10px] font-mono font-bold uppercase mb-1 text-[#0D0D0D] dark:text-[#FFF8E7]">
+                            {t.admin.inspector.inputLinkSubtitle}
+                          </label>
+                          <input
+                            type="text"
+                            value={newLinkSubtitle}
+                            onChange={(e) => setNewLinkSubtitle(e.target.value)}
+                            placeholder={t.admin.inspector.inputLinkSubtitlePlaceholder}
+                            className="w-full px-2.5 py-1.5 text-xs font-mono bg-white dark:bg-[#1C1B1A] brutal-border-sm focus:outline-none"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="flex justify-end gap-2 pt-1">
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            setIsCreateLinkOpen(false);
+                            setCreateLinkError(null);
+                            setCreateLinkSuccess(null);
+                          }}
+                        >
+                          <span>{t.admin.inspector.btnCancelCreateLink}</span>
+                        </Button>
+                        <Button
+                          type="submit"
+                          variant="primary"
+                          size="sm"
+                          isLoading={isCreatingLink}
+                        >
+                          <span className="material-symbols-outlined text-sm">send</span>
+                          <span>{t.admin.inspector.btnSubmitCreateLink}</span>
+                        </Button>
+                      </div>
+                    </form>
+                  </div>
+                )}
 
                 {links.length === 0 ? (
                   <div className="py-8 text-center text-xs font-mono text-neutral-500">

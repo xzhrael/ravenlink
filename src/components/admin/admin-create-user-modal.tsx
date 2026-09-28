@@ -99,12 +99,12 @@ export function AdminCreateUserModal({
     }
 
     if (!username.trim() || username.length < 3) {
-      setErrorMessage("Username minimal 3 karakter.");
+      setErrorMessage(t.admin.createUser.errorMinUsername);
       return;
     }
 
     if (password && password.length < 6) {
-      setErrorMessage("Password minimal 6 karakter.");
+      setErrorMessage(t.admin.createUser.errorMinPassword);
       return;
     }
 
@@ -127,7 +127,7 @@ export function AdminCreateUserModal({
       onSuccess(res.user);
       onClose();
     } else {
-      setErrorMessage(res.error || "Gagal membuat pengguna baru.");
+      setErrorMessage(res.error || t.admin.createUser.errorCreateFailed);
     }
   };
 
@@ -148,10 +148,10 @@ export function AdminCreateUserModal({
             </span>
             <div>
               <h2 className="font-black text-base uppercase tracking-tight text-[#0D0D0D] dark:text-[#FFF8E7]">
-                Tambah Pengguna Baru
+                {t.admin.createUser.title}
               </h2>
               <p className="text-[11px] font-mono text-neutral-500 font-medium">
-                Buat akun pengguna atau admin baru langsung ke database
+                {t.admin.createUser.subtitle}
               </p>
             </div>
           </div>
@@ -182,28 +182,28 @@ export function AdminCreateUserModal({
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs font-mono font-bold uppercase mb-1">
-                Nama Lengkap *
+                {t.admin.createUser.nameLabel}
               </label>
               <input
                 type="text"
                 required
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="misal: Alex Morgan"
+                placeholder={t.admin.createUser.namePlaceholder}
                 className="w-full px-3 py-2 text-xs font-mono bg-white dark:bg-[#1C1B1A] brutal-border-sm focus:outline-none"
               />
             </div>
 
             <div>
               <label className="block text-xs font-mono font-bold uppercase mb-1">
-                Alamat Email *
+                {t.admin.createUser.emailLabel}
               </label>
               <input
                 type="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="nama@domain.com"
+                placeholder={t.admin.createUser.emailPlaceholder}
                 className="w-full px-3 py-2 text-xs font-mono bg-white dark:bg-[#1C1B1A] brutal-border-sm focus:outline-none"
               />
             </div>
@@ -213,7 +213,7 @@ export function AdminCreateUserModal({
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs font-mono font-bold uppercase mb-1">
-                Username / URL Bio *
+                {t.admin.createUser.usernameLabel}
               </label>
               <div className="flex items-stretch brutal-border-sm bg-[#FFF2CE] dark:bg-[#252422]">
                 <span className="px-2 py-2 text-[11px] font-mono font-bold text-neutral-500 border-r border-black select-none flex items-center">
@@ -224,7 +224,7 @@ export function AdminCreateUserModal({
                   required
                   value={username}
                   onChange={(e) => handleUsernameChange(e.target.value)}
-                  placeholder="alex-morgan"
+                  placeholder={t.admin.createUser.usernamePlaceholder}
                   className="flex-1 px-2.5 py-2 text-xs font-mono font-bold bg-white dark:bg-[#1C1B1A] text-black dark:text-white focus:outline-none"
                 />
               </div>
@@ -232,7 +232,7 @@ export function AdminCreateUserModal({
                 {isCheckingUsername && (
                   <span className="text-neutral-500 flex items-center gap-1">
                     <span className="material-symbols-outlined text-xs animate-spin">progress_activity</span>
-                    Memeriksa...
+                    {t.admin.createUser.checking}
                   </span>
                 )}
                 {usernameError && (
@@ -246,14 +246,14 @@ export function AdminCreateUserModal({
 
             <div>
               <label className="block text-xs font-mono font-bold uppercase mb-1">
-                Password (Opsional)
+                {t.admin.createUser.passwordLabel}
               </label>
               <div className="relative">
                 <input
                   type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Min 6 karakter"
+                  placeholder={t.admin.createUser.passwordPlaceholder}
                   className="w-full pl-3 pr-9 py-2 text-xs font-mono bg-white dark:bg-[#1C1B1A] brutal-border-sm focus:outline-none"
                 />
                 <button
@@ -275,7 +275,7 @@ export function AdminCreateUserModal({
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
             <div>
               <label className="block text-xs font-mono font-bold uppercase mb-1.5">
-                Peran Pengguna (Role)
+                {t.admin.createUser.roleLabel}
               </label>
               <div className="flex gap-2">
                 <button
@@ -305,7 +305,7 @@ export function AdminCreateUserModal({
 
             <div>
               <label className="block text-xs font-mono font-bold uppercase mb-1.5">
-                Status Akun
+                {t.admin.createUser.statusLabel}
               </label>
               <div className="flex gap-2">
                 <button
@@ -337,13 +337,13 @@ export function AdminCreateUserModal({
           {/* Bio */}
           <div>
             <label className="block text-xs font-mono font-bold uppercase mb-1">
-              Bio Singkat (Opsional)
+              {t.admin.createUser.bioLabel}
             </label>
             <textarea
               value={bio}
               onChange={(e) => setBio(e.target.value)}
               rows={2}
-              placeholder="Deskripsi singkat profil kreator..."
+              placeholder={t.admin.createUser.bioPlaceholder}
               className="w-full px-3 py-2 text-xs font-mono bg-white dark:bg-[#1C1B1A] brutal-border-sm focus:outline-none"
             />
           </div>
@@ -355,7 +355,7 @@ export function AdminCreateUserModal({
               onClick={onClose}
               className="px-4 py-2 bg-white dark:bg-[#1C1B1A] brutal-border-sm text-xs font-mono font-bold uppercase hover:bg-neutral-100 dark:hover:bg-neutral-800 cursor-pointer"
             >
-              Batal
+              {t.admin.createUser.btnCancel}
             </button>
             <Button
               type="submit"
@@ -365,7 +365,7 @@ export function AdminCreateUserModal({
               disabled={!!usernameError}
             >
               <span className="material-symbols-outlined text-base">person_add</span>
-              <span>Buat Akun Pengguna</span>
+              <span>{isSubmitting ? t.admin.createUser.btnSubmitting : t.admin.createUser.btnSubmit}</span>
             </Button>
           </div>
         </form>

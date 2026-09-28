@@ -64,9 +64,9 @@ export function LoginForm() {
       } else if (errorParam === "AccountSuspended") {
         setErrorMessage(t.auth.errors.accountSuspended);
       } else if (errorParam === "OAuthAccountNotLinked") {
-        setErrorMessage("Email ini telah terdaftar melalui metode lain. Silakan masuk menggunakan Email OTP.");
+        setErrorMessage(t.auth.errors.oauthNotLinked);
       } else if (errorParam === "OAuthCallback" || errorParam === "OAuthSignin" || errorParam === "Callback") {
-        setErrorMessage("Gagal memproses otentikasi Google. Silakan coba kembali.");
+        setErrorMessage(t.auth.errors.googleAuthError);
       } else {
         setErrorMessage(t.auth.errors.generalError);
       }

@@ -131,3 +131,15 @@ export interface AdminUpdateUserInput {
   image?: string;
 }
 
+export interface AdminCreateLinkInput {
+  targetUserId: string;
+  title: string;
+  url: string;
+  category?: string;
+  icon?: string;
+  subtitle?: string;
+  customThumbnail?: string;
+  isActive?: boolean;
+}
+
+

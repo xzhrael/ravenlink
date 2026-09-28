@@ -136,7 +136,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
     if (username !== user.username) {
       const uRes = await updateUsernameAction(username);
       if (!uRes.success) {
-        usernameRes = { success: false, error: uRes.error || "Gagal memperbarui username." };
+        usernameRes = { success: false, error: uRes.error || t.settings.usernameUpdateError };
       }
     }
 
